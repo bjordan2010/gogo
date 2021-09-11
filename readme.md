@@ -1,4 +1,4 @@
-Gogo is my 2nd attempt at a Go (game, weiqi, baduk) game in Go (lang).  Borrowed some Shiny example code for a good start.
+Gogo is my 2nd attempt at a Go (weiqi, baduk) game in Go (lang).  Borrowed some Shiny example code for a good start.
 
 ## Todo List
 - [x] Figure out how to use command line options to set board size and scale (19,18 and 9,35) May improve later but it works.
