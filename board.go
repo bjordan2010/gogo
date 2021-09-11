@@ -16,7 +16,7 @@ import (
 
 const maxBoard = 21 // Maximum board size we can handle.
 
-var ZP = image.ZP // For brevity.
+var ZP = image.Point{}
 
 type stoneColor uint8
 
@@ -199,7 +199,7 @@ func makeShadowMask(stone image.Image) *image.Alpha {
 	// Make alpha work on stone.
 	// Shade gives shape, to be applied with black.
 	const size = 256
-	const diam = 225
+	//const diam = 225
 	for y := 0; y < size; y++ {
 		y2 := size/2 - y
 		y2 *= y2
@@ -290,9 +290,9 @@ func (b *Board) click(m *image.RGBA, x, y, button int) bool {
 		return false
 	case 1:
 		b.putPiece(ij, b.selectBlackPiece())
-	case 2:
-		b.putPiece(ij, b.selectWhitePiece())
 	case 3:
+		b.putPiece(ij, b.selectWhitePiece())
+	case 2:
 		b.putPiece(ij, nil)
 	}
 	render(m, b) // TODO: Connect this to paint events.

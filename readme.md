@@ -2,25 +2,30 @@ Gogo is my 2nd attempt at a Go (game, weiqi, baduk) game in Go (lang).  Borrowed
 
 ##Todo List
 - [x] Figure out how to use command line options to set board size and scale (19,18 and 9,35) May improve later but it works.
-- [ ] Change white to right click (3) and remove stone to middle click (2)
-- [ ] Do more manual testing on 9x9 to understand code
-- [ ] Add some written tests to understand code
-- [ ] Fix board crashing with 19x19
+- [x] Change white to right click (3) and remove stone to middle click (2)
+- [x] Do more manual testing on 9x9 to understand code
+- [ ] Add some written tests to understand shiny code
+- [ ] Fix cmd+q not having focus to close even after mouse click
 - [ ] Use these keys to
-- cmd+q to close
-- cmd+n to new game
+- cmd+n to new game 19x19
+- cmd+m to new game 9x9
 - cmd+o to resign as white
 - cmd+p to resign as black
 - cmd+b to pass as black
 - cmd+w to pass as white
 - [ ] Add coordinates
-- [ ] Test respecting ko
-- [ ] Add red dot to last move
-- [ ] Create dumb AI
-- [ ] Implement passing
-- [ ] Implement scoring after consecutive passes
-- [ ] Save board to sgf file
+- [ ] Add indicator to last move for each color
 - [ ] Add sound for stone placement
-- [ ] Make the AI learn
 - [ ] Upgrade to 1.17
+- [ ] Implement Go rules:
+- Capturing stones
+- Disallow placing new stone if stone already in place
+- Implement passing
+- Implement resigning
+- Implement scoring after consecutive passes
+- Add respecting ko
+- [ ] Load board from sgf file
+- [ ] Save board to sgf file
+- [ ] Create dumb AI
 - [ ] Implement review with KataGo
+- [ ] Make the AI learn

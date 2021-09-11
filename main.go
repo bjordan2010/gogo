@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"image"
 	"log"
 	"math/rand"
@@ -19,36 +20,58 @@ import (
 
 var scale *int //= flag.Int("scale", 35, "`percent` to scale images 35 or 18")
 
-//var dim = flag.Int("dim", 9, "`size of board 9 or 19")
-
 func main() {
 	//flag.Parse()
 
 	rand.Seed(int64(time.Now().Nanosecond()))
-	dimStr := os.Args[1]
-	if dimStr == "" {
-		dimStr = "9"
+	if len(os.Args) > 1 {
+		help := os.Args[1]
+		if help != "" && help == "help" {
+			fmt.Println("Usage: ./gogo size scale\nOne of ./gogo 9 35, or ./gogo 19 18, or ./gogo (defaults to 9 35)\nOptionally: ./gogo help (this help)")
+			os.Exit(0)
+		}
 	}
-	dim, err := strconv.Atoi(dimStr)
-	if err != nil {
-		log.Fatal(err)
+	args := os.Args[1:]
+	var dim int
+	var err error
+	if len(args) > 0 {
+		dimStr := args[0]
+		if dimStr == "" || (dimStr != "9" && dimStr != "19") {
+			dimStr = "9"
+		}
+		dim, err = strconv.Atoi(dimStr)
+		if err != nil {
+			log.Fatal(err)
+		}
+		if len(args) == 2 {
+			scaleStr := args[1]
+			if scaleStr == "" || (scaleStr != "35" && scaleStr != "18") {
+				if dim == 19 {
+					scaleStr = "18"
+				} else {
+					scaleStr = "35"
+				}
+			}
+			scaleInt, err := strconv.Atoi(scaleStr)
+			if err != nil {
+				log.Fatal(err)
+			}
+			scale = &scaleInt
+		}
+	} else {
+		dim = 9
+		scaleInt := 35
+		scale = &scaleInt
 	}
-	scaleStr := os.Args[2]
-	if scaleStr == "" {
-		scaleStr = "35"
-	}
-	scaleInt, err := strconv.Atoi(scaleStr)
-	if err != nil {
-		log.Fatal(err)
-	}
-	log.Printf("Board: %dx%d", dim, dim)
-	log.Printf("Scale: %d%%", scaleInt)
-	scale := &scaleInt
+
+	fmt.Printf("Board: %dx%d\n", dim, dim)
+	fmt.Printf("Scale: %d%%\n", *scale)
+
 	board := NewBoard(dim, *scale)
 
 	driver.Main(func(s screen.Screen) {
 		w, err := s.NewWindow(&screen.NewWindowOptions{
-			Title: "Goban Shiny Example",
+			Title: "Gogo",
 		})
 		if err != nil {
 			log.Fatal(err)
