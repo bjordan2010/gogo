@@ -7,12 +7,12 @@ Gogo is my 2nd attempt at a Go (game, weiqi, baduk) game in Go (lang).  Borrowed
 - [ ] Add some written tests to understand code
 - [ ] Fix board crashing with 19x19
 - [ ] Use these keys to
-   -cmd+q to close
-   -cmd+n to new game
-   -cmd+o to resign as white
-   -cmd+p to resign as black
-   -cmd+b to pass as black
-   -cmd+w to pass as white
+- cmd+q to close
+- cmd+n to new game
+- cmd+o to resign as white
+- cmd+p to resign as black
+- cmd+b to pass as black
+- cmd+w to pass as white
 - [ ] Add coordinates
 - [ ] Test respecting ko
 - [ ] Add red dot to last move
