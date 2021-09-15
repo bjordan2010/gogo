@@ -1,6 +1,7 @@
 Gogo is my 2nd attempt at a Go (weiqi, baduk) game in Go (lang).  Borrowed some Shiny example code for a good start. I also used *Deep Learning and the Game of Go* by Max Pumperla et al for the game state and AI.
 
 ## Todo List
+- Fix existing bugs/problems
 - [x] Figure out how to use command line options to set board size and scale (19,18 and 9,35) May improve later but it works.
 - [x] Change white to right click (3) and remove stone to middle click (2)
 - [x] Do more manual testing on 9x9 to understand code
@@ -17,7 +18,9 @@ Gogo is my 2nd attempt at a Go (weiqi, baduk) game in Go (lang).  Borrowed some 
 - [ ] Add indicator to last move for each color
 - [ ] Add sound for stone placement
 - [ ] Upgrade to 1.17
-- Implement Go rules:
+
+
+- Implement Go rules
 - [x] Capturing stones
 - [ ] Disallow placing new stone if stone already in place
 - [ ] Implement passing
@@ -27,6 +30,9 @@ Gogo is my 2nd attempt at a Go (weiqi, baduk) game in Go (lang).  Borrowed some 
 - [x] Track liberties for each stone
 - [ ] Track game state part 2
 - [ ] Add respecting ko
+
+
+- Utilities
 - [ ] Load board from sgf file
 - [ ] Save board to sgf file
 - [ ] Create dumb AI
