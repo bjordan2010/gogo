@@ -22,6 +22,7 @@ Gogo is my 2nd attempt at a Go (weiqi, baduk) game in Go (lang).  Borrowed some 
 ---
 - Implement Go rules
 - [x] Capturing stones
+- [ ] Disallow playing out of turn
 - [ ] Disallow placing new stone if stone already in place
 - [ ] Implement passing
 - [ ] Implement resigning
