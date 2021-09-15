@@ -96,6 +96,43 @@ func main() {
 				if e.Code == key.CodeEscape {
 					return
 				}
+				if e.Modifiers == key.ModMeta {
+					c := e.Code
+					switch c {
+					case key.CodeQ:
+						os.Exit(0)
+					case key.CodeN:
+						dim = 19
+						scaleInt := 18
+						scale = &scaleInt
+						board = NewBoard(dim, *scale)
+						if b != nil {
+							b.Release()
+						}
+						b, err = s.NewBuffer(image.Point{1024, 768})
+						if err != nil {
+							log.Fatal(err)
+						}
+						render(b.RGBA(), board)
+						w.Upload(image.Point{}, b, b.Bounds())
+						w.Publish()
+					case key.CodeM:
+						dim = 9
+						scaleInt := 35
+						scale = &scaleInt
+						board = NewBoard(dim, *scale)
+						if b != nil {
+							b.Release()
+						}
+						b, err = s.NewBuffer(image.Point{1024, 768})
+						if err != nil {
+							log.Fatal(err)
+						}
+						render(b.RGBA(), board)
+						w.Upload(image.Point{}, b, b.Bounds())
+						w.Publish()
+					}
+				}
 
 			case mouse.Event:
 				if e.Direction != mouse.DirRelease {

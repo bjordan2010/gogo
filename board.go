@@ -16,7 +16,7 @@ import (
 	"golang.org/x/image/draw"
 )
 
-const maxBoard = 21 // Maximum board size we can handle.
+const maxBoard = 19 // Maximum board size we can handle.
 
 var ZP = image.Point{}
 
@@ -102,7 +102,7 @@ func NewBoard(dim, percent int) *Board {
 			b.numWhiteStones++
 		}
 	}
-	b.Resize(percent) // TODO
+	b.Resize(percent)
 	b.grid = make(map[Point]*Bunch)
 	return b
 }
@@ -145,21 +145,25 @@ func (b *Board) putPiece(ij IJ, piece *Piece) {
 	if piece != nil {
 		piece.ij = ij
 		piece.delta = image.Point{jitter(), jitter()}
+
+		// Game State
 		var player Player
 		if Black == Player(piece.color.val()) {
 			player = Black
 		} else {
 			player = White
 		}
-
 		point := Point{ij.i, ij.j}
 		stonesToRemove := b.placeStone(player, point)
+
+		// Game rule automatic remove stone for rendering
 		for _, p := range stonesToRemove {
 			b.putPiece(IJ{i: p.Row, j: p.Col}, nil)
 		}
 	}
 }
 
+// Game State
 func (b *Board) placeStone(player Player, point Point) []Point {
 	stonesToRemove := make([]Point, 0)
 	if 1 < point.Row && point.Col > b.dim {
