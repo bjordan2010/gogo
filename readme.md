@@ -31,6 +31,7 @@ Gogo is my 2nd attempt at a Go (weiqi, baduk) game in Go (lang).  Borrowed some 
 - [x] Track liberties for each stone
 - [ ] Track game state part 2
 - [ ] Add respecting ko
+- [ ] Fix bad captures
 ---
 - Utilities
 - [ ] Load board from sgf file
