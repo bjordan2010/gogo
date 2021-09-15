@@ -6,20 +6,20 @@ Gogo is my 2nd attempt at a Go (weiqi, baduk) game in Go (lang).  Borrowed some 
 - [x] Change white to right click (3) and remove stone to middle click (2)
 - [x] Do more manual testing on 9x9 to understand code
 - [ ] Add some written tests to understand shiny code
-- [ ] Fix cmd+q not having focus to close even after mouse click
-- [ ] Use these keys to
-- cmd+n to new game 19x19
-- cmd+m to new game 9x9
-- cmd+o to resign as white
-- cmd+p to resign as black
-- cmd+b to pass as black
-- cmd+w to pass as white
 - [ ] Add coordinates
 - [ ] Add indicator to last move for each color
 - [ ] Add sound for stone placement
 - [ ] Upgrade to 1.17
-
-
+---
+- Add Keyboard commands
+- [ ] Fix cmd+q not having focus to close even after focusing game
+- [ ] cmd+n to new game 19x19
+- [ ] cmd+m to new game 9x9
+- [ ] cmd+o to resign as white
+- [ ] cmd+p to resign as black
+- [ ] cmd+b to pass as black
+- [ ] cmd+w to pass as white
+---
 - Implement Go rules
 - [x] Capturing stones
 - [ ] Disallow placing new stone if stone already in place
@@ -30,8 +30,7 @@ Gogo is my 2nd attempt at a Go (weiqi, baduk) game in Go (lang).  Borrowed some 
 - [x] Track liberties for each stone
 - [ ] Track game state part 2
 - [ ] Add respecting ko
-
-
+---
 - Utilities
 - [ ] Load board from sgf file
 - [ ] Save board to sgf file
