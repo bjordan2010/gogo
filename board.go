@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"image"
 	"image/color"
 	_ "image/jpeg"
@@ -9,6 +10,7 @@ import (
 	"math/rand"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strings"
 
 	"golang.org/x/image/draw"
@@ -26,6 +28,17 @@ const (
 	white
 )
 
+func (s *stoneColor) val() uint8 {
+	switch *s {
+	case blank:
+		return 0
+	case black:
+		return 1
+	}
+
+	return 2
+}
+
 // Piece represents a stone on the board. A nil Piece is "blank".
 // The delta records pixel offset from the central dot.
 type Piece struct {
@@ -42,6 +55,7 @@ type Board struct {
 	stone          []Stone // All the black stones, followed by all the white stones.
 	numBlackStones int
 	numWhiteStones int
+	grid           map[Point]*Bunch // map of Bunches by Point
 }
 
 type Stone struct {
@@ -89,6 +103,7 @@ func NewBoard(dim, percent int) *Board {
 		}
 	}
 	b.Resize(percent) // TODO
+	b.grid = make(map[Point]*Bunch)
 	return b
 }
 
@@ -130,7 +145,114 @@ func (b *Board) putPiece(ij IJ, piece *Piece) {
 	if piece != nil {
 		piece.ij = ij
 		piece.delta = image.Point{jitter(), jitter()}
+		var player Player
+		if Black == Player(piece.color.val()) {
+			player = Black
+		} else {
+			player = White
+		}
+
+		point := Point{ij.i, ij.j}
+		stonesToRemove := b.placeStone(player, point)
+		for _, p := range stonesToRemove {
+			b.putPiece(IJ{i: p.Row, j: p.Col}, nil)
+		}
 	}
+}
+
+func (b *Board) placeStone(player Player, point Point) []Point {
+	stonesToRemove := make([]Point, 0)
+	if 1 < point.Row && point.Col > b.dim {
+		log.Fatal("Point row outside board cannot place stone")
+		return stonesToRemove
+	}
+	if 1 < point.Col && point.Col > b.dim {
+		log.Fatal("Point col outside board cannot place stone")
+		return stonesToRemove
+	}
+	var friendly_bunch []Bunch
+	var enemy_bunch []Bunch
+	var liberties []Point
+	for _, n := range point.Neighbors() {
+		if 1 < n.Row && n.Row > b.dim {
+			log.Printf("Neighbor row %d outside board cannot place stone\n", n.Row)
+			continue
+		}
+		if 1 < n.Col && n.Col > b.dim {
+			log.Printf("Neighbor col %d outside board cannot place stone\n", n.Col)
+			continue
+		}
+
+		// if neighbor point is in bunch
+		if bunch, ok := b.grid[n]; ok {
+			if bunch.Player == player && !contains(friendly_bunch, *bunch) {
+				friendly_bunch = append(friendly_bunch, *bunch)
+			} else {
+				if !contains(enemy_bunch, *bunch) {
+					enemy_bunch = append(enemy_bunch, *bunch)
+				}
+			}
+		} else {
+			liberties = append(liberties, n)
+		}
+	}
+	stones := make([]Point, 0)
+	stones = append(stones, point)
+	bunch := Bunch{Player: player, Stones: stones, Liberties: liberties}
+	for _, bu := range friendly_bunch {
+		bunch.MergeWith(bu)
+	}
+	for _, p := range bunch.Stones {
+		b.grid[p] = &bunch
+	}
+	for _, bu := range b.grid {
+		for _, p := range bu.Liberties {
+			if p == point && bu.Player != player {
+				bu.RemoveLiberty(point)
+			}
+		}
+	}
+
+	for p, bu := range b.grid {
+		if bu.LibertyCount() == 0 {
+			for _, n := range p.Neighbors() {
+				if val, ok := b.grid[n]; ok {
+					val.AddLiberty(p)
+				}
+			}
+			stonesToRemove = append(stonesToRemove, p)
+		}
+	}
+
+	for _, p := range stonesToRemove {
+		delete(b.grid, p)
+	}
+
+	fmt.Println("Placing Stone Info")
+	fmt.Printf("Placing %s stone at (%d,%d)\n\n", player.String(), point.Row, point.Col)
+	for i, bu := range b.grid {
+		fmt.Printf("Bunch (%d,%d):\n", i.Row, i.Col)
+		fmt.Printf("Player: %s\n", bu.Player.String())
+		for j, p := range bu.Stones {
+			fmt.Printf("Stone Point %d: (%d,%d)\n", j+1, p.Row, p.Col)
+		}
+		for j, p := range bu.Liberties {
+			fmt.Printf("Liberty Point %d: (%d,%d)\n", j+1, p.Row, p.Col)
+		}
+	}
+	fmt.Print("\n\n\n")
+
+	return stonesToRemove
+}
+
+func contains(s []Bunch, bunch Bunch) bool {
+	for _, b := range s {
+		if reflect.DeepEqual(b, bunch) {
+			return true
+		}
+	}
+
+	return false
 }
 
 func (b *Board) selectBlackPiece() *Piece {
@@ -170,7 +292,7 @@ func get(name string, size int) image.Image {
 	if size != 0 {
 		r := i.Bounds()
 		if r.Dx() != size || r.Dy() != size {
-			log.Fatalf("bad stone size %s for %s; must be %d[2]×%d[2]", r, name, size)
+			log.Fatalf("bad stone size %s for %s; must be %d[2]×%d[2]", r, name, size, size)
 		}
 	}
 	return i
